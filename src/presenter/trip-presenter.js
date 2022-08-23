@@ -8,6 +8,8 @@ import TripPointEditView from '../view/trip-point-edit-view.js';
 
 import {render, RenderPosition} from '../render.js';
 
+const COUNT_OF_TRIP_POINTS = 3;
+
 export default class TripPresenter {
   tripPointsComponent = new TripPointsContainerView();
   tripPointSortComponent = new TripPointsSortView();
@@ -19,7 +21,7 @@ export default class TripPresenter {
     render(this.tripPointsComponent, this.tripMainContainer, RenderPosition.BEFOREEND);
     render(this.tripPointSortComponent, this.tripMainContainer, RenderPosition.AFTERBEGIN);
 
-    for(let i = 0; i < 3; i++) {
+    for(let i = 0; i < COUNT_OF_TRIP_POINTS; i++) {
       render(new TripPointView(), this.tripPointsComponent.getElement());
     }
 
