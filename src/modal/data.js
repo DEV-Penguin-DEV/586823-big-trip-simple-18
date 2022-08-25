@@ -1,6 +1,7 @@
-import { getRandomNumber, getRandomArrayElement, getDeepObjectCopy} from '../utils.js';
+import { getRandomNumber, getRandomArrayElement, getDeepObjectCopy, getRandomDatePair} from '../utils.js';
 import * as constants from '../constants.js';
 
+/*----------------TEMPLATES----------------*/
 const pointDestinationTemplate = {
   'id': 0,
   'description': '',
@@ -13,11 +14,11 @@ const pointDestinationTemplate = {
   ]
 };
 
-// const pointOfferTemplate = {
-//   'id': 0,
-//   'title': '',
-//   'price': 0
-// };
+const pointOfferTemplate = {
+  'id': 0,
+  'title': '',
+  'price': 0
+};
 
 const pointObjectTemplate = {
   'base_price': 0,
@@ -29,28 +30,35 @@ const pointObjectTemplate = {
   'type': ''
 };
 
-const generateTestTripPointData = (id) => {
-  const newTestTripPointData = getDeepObjectCopy(pointObjectTemplate);
 
-  // Trip point base object
-  // eslint-disable-next-line camelcase
-  newTestTripPointData.base_price = getRandomNumber(100, 5000);
-  newTestTripPointData.id = `${id}`;
-  newTestTripPointData.type = getRandomArrayElement(constants.TRIP_POINT_TYPES);
-  // eslint-disable-next-line camelcase
+/*----------------FUNCTIONS----------------*/
+const generateTestTripPointOffer = (id) => {
+  const newTripPointOffer = getDeepObjectCopy(pointOfferTemplate);
 
-  return newTestTripPointData;
+  newTripPointOffer.id = id;
+  newTripPointOffer.title = getRandomArrayElement(constants.OFFER_DESCRIPTIONS);
+  newTripPointOffer.price = getRandomNumber(constants.OFFER_PRICE_RANGE.min, constants.OFFER_PRICE_RANGE.max);
+
+  return newTripPointOffer;
 };
 
-// const generateTestTripPointOffer = (id) => {
-//   const newTripPointOffer = getDeepObjectCopy(pointOfferTemplate);
-//   // Trip point offer
-//   newTripPointOffer.id = id;
-//   newTripPointOffer.title = 'Upgrade to a business class';
-//   newTripPointOffer.price = getRandomNumber(50, 5000);
+const generateAllTestTripPointOffers = (id) => {
+  const offers = [];
+  const usedDescriptions = [];
+  const countOffers = getRandomNumber(0, constants.OFFER_DESCRIPTIONS.length);
 
-//   return newTripPointOffer;
-// };
+  for(let i = 0; i < countOffers; i++) {
+    let offer;
+    do {
+      offer = generateTestTripPointOffer(id);
+    } while(usedDescriptions.indexOf(offer) !== -1);
+
+    offers[i] = offer;
+    usedDescriptions[i] = offer.description;
+  }
+
+  return offers;
+};
 
 const generateTestTripPointDestination = (id) => {
   const newTripPointDestination = getDeepObjectCopy(pointDestinationTemplate);
@@ -67,33 +75,33 @@ const generateTestTripPointDestination = (id) => {
   return newTripPointDestination;
 };
 
-// const generateAllTestTripPointOffers = (countTrips) => {
-//   const offers = [];
-//   for(let i = 0; i < countTrips; i++) {
-//     for(let j = 0; j < getRandomNumber(1, 5); j++) {
-//       offers[j] = generateTestTripPointOffer(i);
-//     }
-//   }
+const generateTestTripPointData = (id) => {
+  const newTestTripPointData = getDeepObjectCopy(pointObjectTemplate);
+  const dates = getRandomDatePair();
 
-//   return offers;
-// };
+  // Trip point base object
+  // eslint-disable-next-line camelcase
+  newTestTripPointData.base_price = getRandomNumber(constants.BASE_PRICE_RANGE.min, constants.BASE_PRICE_RANGE.max);
+  newTestTripPointData.id = `${id}`;
+  newTestTripPointData.type = getRandomArrayElement(constants.TRIP_POINT_TYPES);
+  // eslint-disable-next-line camelcase
+  newTestTripPointData.date_from = dates.data_from;
+  // eslint-disable-next-line camelcase
+  newTestTripPointData.date_to = dates.data_to;
+
+  return newTestTripPointData;
+};
+
 
 const generateAllTestTripPointsData = (countTrips) => {
-  const AllTestTripPointsData = [];
+  const allTestTripPointsData = [];
   for(let i = 0; i < countTrips; i++) {
-    AllTestTripPointsData[i] = generateTestTripPointData(i);
+    allTestTripPointsData[i] = generateTestTripPointData(i);
+    allTestTripPointsData[i].destination = generateTestTripPointDestination(i);
+    allTestTripPointsData[i].offers = generateAllTestTripPointOffers(i);
   }
 
-  return AllTestTripPointsData;
+  return allTestTripPointsData;
 };
 
-const generateAllTestTripPointsDestination = (countTrips) => {
-  const AllTestTripPointsDestination = [];
-  for(let i = 0; i < countTrips; i++) {
-    AllTestTripPointsDestination[i] = generateTestTripPointDestination(i);
-  }
-
-  return AllTestTripPointsDestination;
-};
-
-export {generateAllTestTripPointsData, generateAllTestTripPointsDestination};
+export {generateAllTestTripPointsData};

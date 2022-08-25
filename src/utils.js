@@ -1,4 +1,4 @@
-// import dayjs from 'dayjs';
+import dayjs from 'dayjs';
 
 const getRandomNumber = (from = 0, to = 1) => {
   if(from < 0 || to < 0) {return null;}
@@ -12,10 +12,18 @@ const getRandomArrayElement = (array) => array[getRandomNumber(0, (array.length 
 
 const getDeepObjectCopy = (object) => JSON.parse(JSON.stringify(object));
 
-// const generateRandomDate = () => {
-//   const day = getRandomNumber(1, 28);
-//   const month = getRandomNumber(1, 12);
-//   return dayjs('22-12-2022', 'DD-MM-YYYY');
-// };
+const getRandomDatePair = () => {
+  const dates = {
+    'data_from': '',
+    'data_to': ''
+  };
 
-export{getRandomNumber, getRandomArrayElement, getDeepObjectCopy};
+  // eslint-disable-next-line camelcase
+  dates.data_from = dayjs().add(getRandomNumber(1, 7), 'day');
+  // eslint-disable-next-line camelcase
+  dates.data_to = dates.data_from.add(getRandomNumber(1, 7), 'day');
+
+  return dates;
+};
+
+export{getRandomNumber, getRandomArrayElement, getDeepObjectCopy, getRandomDatePair};

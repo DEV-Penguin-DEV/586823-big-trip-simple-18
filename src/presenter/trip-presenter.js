@@ -16,13 +16,14 @@ export default class TripPresenter {
   tripPointCreatorComponent = new NewTripPointView();
   tripPointEditorComponent = new TripPointEditView();
 
-  init(tripMainContainer) {
+  init(tripMainContainer, generateAllTestTripPointsData) {
+    const allTestTripPointsData = generateAllTestTripPointsData(COUNT_OF_TRIP_POINTS);
     this.tripMainContainer = tripMainContainer;
     render(this.tripPointsComponent, this.tripMainContainer, RenderPosition.BEFOREEND);
     render(this.tripPointSortComponent, this.tripMainContainer, RenderPosition.AFTERBEGIN);
 
     for(let i = 0; i < COUNT_OF_TRIP_POINTS; i++) {
-      render(new TripPointView(), this.tripPointsComponent.getElement());
+      render(new TripPointView(allTestTripPointsData[i]), this.tripPointsComponent.getElement());
     }
 
     render(this.tripPointCreatorComponent, this.tripPointsComponent.getElement().firstElementChild, RenderPosition.AFTERBEGIN);
