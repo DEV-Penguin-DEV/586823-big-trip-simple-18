@@ -21,9 +21,9 @@ const pointOfferTemplate = {
 };
 
 const pointObjectTemplate = {
-  'base_price': 0,
-  'date_from': '',
-  'date_to': '',
+  'basePrice': 0,
+  'dateFrom': '',
+  'dateTo': '',
   'destination': {},
   'id': '',
   'offers': [],
@@ -37,7 +37,7 @@ const generateTestTripPointOffer = (id) => {
 
   newTripPointOffer.id = id;
   newTripPointOffer.title = getRandomArrayElement(constants.OFFER_DESCRIPTIONS);
-  newTripPointOffer.price = getRandomNumber(constants.OFFER_PRICE_RANGE.min, constants.OFFER_PRICE_RANGE.max);
+  newTripPointOffer.price = getRandomNumber(constants.OFFER_PRICE_RANGE.min, constants.OFFER_PRICE_RANGE.max) * 10;
 
   return newTripPointOffer;
 };
@@ -80,14 +80,12 @@ const generateTestTripPointData = (id) => {
   const dates = getRandomDatePair();
 
   // Trip point base object
-  // eslint-disable-next-line camelcase
-  newTestTripPointData.base_price = getRandomNumber(constants.BASE_PRICE_RANGE.min, constants.BASE_PRICE_RANGE.max);
+
+  newTestTripPointData.basePrice = getRandomNumber(constants.BASE_PRICE_RANGE.min, constants.BASE_PRICE_RANGE.max) * 10;
   newTestTripPointData.id = `${id}`;
   newTestTripPointData.type = getRandomArrayElement(constants.TRIP_POINT_TYPES);
-  // eslint-disable-next-line camelcase
-  newTestTripPointData.date_from = dates.data_from;
-  // eslint-disable-next-line camelcase
-  newTestTripPointData.date_to = dates.data_to;
+  newTestTripPointData.dateFrom = dates.dateFrom;
+  newTestTripPointData.dateTo = dates.dateTo;
 
   return newTestTripPointData;
 };

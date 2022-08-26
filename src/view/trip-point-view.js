@@ -3,26 +3,26 @@ import dayjs from 'dayjs';
 import {createElement} from '../render.js';
 
 const createTripPoint = (testTripPointData) => {
-  const {base_price, data_from, data_to, type} = testTripPointData;
+  const {basePrice, dataFrom, dataTo, type} = testTripPointData;
   const {name} = testTripPointData.destination;
   const {price, title} = testTripPointData.offers[0];
   return (`
   <li class="trip-events__item">
   <div class="event">
-    <time class="event__date" datetime="${data_from}">${dayjs(data_from).format('DD MMM')}</time>
+    <time class="event__date" datetime="${dataFrom}">${dayjs(dataFrom).format('DD MMM')}</time>
     <div class="event__type">
       <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
     </div>
     <h3 class="event__title">${name} ${type}</h3>
     <div class="event__schedule">
       <p class="event__time">
-        <time class="event__start-time" datetime="${data_from}">${dayjs(data_from).format('HH:mm')}</time>
+        <time class="event__start-time" datetime="${dataFrom}">${dayjs(dataFrom).format('HH:mm')}</time>
         &mdash;
-        <time class="event__end-time" datetime="${data_to}">${dayjs(data_to).format('HH:mm')}</time>
+        <time class="event__end-time" datetime="${dataTo}">${dayjs(dataTo).format('HH:mm')}</time>
       </p>
     </div>
     <p class="event__price">
-      &euro;&nbsp;<span class="event__price-value">${base_price}</span>
+      &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
     </p>
     <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">

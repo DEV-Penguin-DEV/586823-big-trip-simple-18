@@ -4,13 +4,13 @@ const TRIP_POINT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'ch
 const OFFER_DESCRIPTIONS = ['Add bagage', 'Upgrade to a business class', 'Add the Red carpet', 'Add champagnie', 'Buy insurance'];
 
 const OFFER_PRICE_RANGE = {
-  'min': 10,
-  'max': 500
+  'min': 1,
+  'max': 50
 };
 
 const BASE_PRICE_RANGE = {
-  'min': 100,
-  'max': 1000
+  'min': 10,
+  'max': 100
 };
 
 export {CITYS, TRIP_POINTS_DESCRIPTIONS, TRIP_POINT_TYPES, OFFER_DESCRIPTIONS, OFFER_PRICE_RANGE, BASE_PRICE_RANGE};
