@@ -1,29 +1,25 @@
 import dayjs from 'dayjs';
 
 const getRandomNumber = (from = 0, to = 1) => {
-  if(from < 0 || to < 0) {return null;}
+  if(from < 0 || to < 0) {return 0;}
   if(from === to) {return from;}
-  if(from > to) {return null;}
+  if(from > to) {return 0;}
 
   return Math.round(Math.random() * (to - from) + from);
 };
 
-const getRandomArrayElement = (array) => array[getRandomNumber(0, (array.length - 1))];
-
-const getDeepObjectCopy = (object) => JSON.parse(JSON.stringify(object));
+const getRandomArrayElement = (list) => list[getRandomNumber(0, (list.length - 1))];
 
 const getRandomDatePair = () => {
   const dates = {
-    'data_from': '',
-    'data_to': ''
+    dateFrom: '',
+    dateTo: ''
   };
 
-  // eslint-disable-next-line camelcase
-  dates.data_from = dayjs().add(getRandomNumber(1, 7), 'day');
-  // eslint-disable-next-line camelcase
-  dates.data_to = dates.data_from.add(getRandomNumber(1, 7), 'day');
+  dates.dateFrom = dayjs().add(getRandomNumber(1, 7), 'day');
+  dates.dateTo = dates.dateFrom.add(getRandomNumber(1, 7), 'day').add(getRandomNumber(1, 23), 'hour');
 
   return dates;
 };
 
-export{getRandomNumber, getRandomArrayElement, getDeepObjectCopy, getRandomDatePair};
+export{getRandomNumber, getRandomArrayElement, getRandomDatePair};

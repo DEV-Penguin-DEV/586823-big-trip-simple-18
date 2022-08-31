@@ -3,22 +3,22 @@ import dayjs from 'dayjs';
 import {createElement} from '../render.js';
 
 const createTripPoint = (testTripPointData) => {
-  const {basePrice, dataFrom, dataTo, type} = testTripPointData;
+  const {basePrice, dateFrom, dateTo, type} = testTripPointData;
   const {name} = testTripPointData.destination;
   const {price, title} = testTripPointData.offers[0];
   return (`
   <li class="trip-events__item">
   <div class="event">
-    <time class="event__date" datetime="${dataFrom}">${dayjs(dataFrom).format('DD MMM')}</time>
+    <time class="event__date" datetime="${dateFrom}">${dayjs(dateFrom).format('DD MMM')}</time>
     <div class="event__type">
       <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
     </div>
     <h3 class="event__title">${name} ${type}</h3>
     <div class="event__schedule">
       <p class="event__time">
-        <time class="event__start-time" datetime="${dataFrom}">${dayjs(dataFrom).format('HH:mm')}</time>
+        <time class="event__start-time" datetime="${dateFrom}">${dayjs(dateFrom).format('HH:mm')}</time>
         &mdash;
-        <time class="event__end-time" datetime="${dataTo}">${dayjs(dataTo).format('HH:mm')}</time>
+        <time class="event__end-time" datetime="${dateTo}">${dayjs(dateTo).format('HH:mm')}</time>
       </p>
     </div>
     <p class="event__price">
