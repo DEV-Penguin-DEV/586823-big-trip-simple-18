@@ -7,8 +7,7 @@ import NewTripPointDestinationView from '../view/new-trip-point-destination-view
 import TripPointEditView from '../view/trip-point-edit-view.js';
 
 import {render, RenderPosition} from '../render.js';
-
-const COUNT_OF_TRIP_POINTS = 3;
+import {COUNT_OF_TRIP_POINTS} from '../constants.js';
 
 export default class TripPresenter {
   tripPointsComponent = new TripPointsContainerView();
@@ -16,22 +15,23 @@ export default class TripPresenter {
   tripPointCreatorComponent = new NewTripPointView();
   tripPointEditorComponent = new TripPointEditView();
 
-  init(tripMainContainer) {
+  init(tripMainContainer, TripPointsData) {
     this.tripMainContainer = tripMainContainer;
-    render(this.tripPointsComponent, this.tripMainContainer, RenderPosition.BEFOREEND);
+    render(this.tripPointsComponent, this.tripMainContainer);
     render(this.tripPointSortComponent, this.tripMainContainer, RenderPosition.AFTERBEGIN);
 
+    render(this.tripPointCreatorComponent, this.tripPointsComponent.getElement());
+
     for(let i = 0; i < COUNT_OF_TRIP_POINTS; i++) {
-      render(new TripPointView(), this.tripPointsComponent.getElement());
+      render(new TripPointView(TripPointsData[i]), this.tripPointsComponent.getElement());
     }
 
-    render(this.tripPointCreatorComponent, this.tripPointsComponent.getElement().firstElementChild, RenderPosition.AFTERBEGIN);
-    render(this.tripPointEditorComponent, this.tripPointsComponent.getElement().lastElementChild, RenderPosition.BEFOREEND);
+    render(this.tripPointEditorComponent, this.tripPointsComponent.getElement().lastElementChild);
 
     render(new NewTripPointOfferView(), this.tripPointCreatorComponent.getElement().querySelector('.event__details'), RenderPosition.AFTERBEGIN);
-    render(new NewTripPointDestinationView(), this.tripPointCreatorComponent.getElement().querySelector('.event__details'), RenderPosition.BEFOREEND);
+    render(new NewTripPointDestinationView(), this.tripPointCreatorComponent.getElement().querySelector('.event__details'));
 
     render(new NewTripPointOfferView(), this.tripPointEditorComponent.getElement().querySelector('.event__details'), RenderPosition.AFTERBEGIN);
-    render(new NewTripPointDestinationView(), this.tripPointEditorComponent.getElement().querySelector('.event__details'), RenderPosition.BEFOREEND);
+    render(new NewTripPointDestinationView(), this.tripPointEditorComponent.getElement().querySelector('.event__details'));
   }
 }
