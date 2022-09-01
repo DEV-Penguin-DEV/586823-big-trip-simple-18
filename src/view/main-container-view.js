@@ -1,15 +1,15 @@
 import {createElement} from '../render.js';
 
-const createLoadingMessageTemplate = () =>
+const createMainContainerTemplate = () =>
   (`
-  <p class="trip-events__msg">Loading...</p>
+  <section class="trip-events"></section>
   `);
 
-export default class LoadingMessageView {
+export default class MainContainerView {
   #element = null;
 
   get template() {
-    return createLoadingMessageTemplate();
+    return createMainContainerTemplate();
   }
 
   get element() {
