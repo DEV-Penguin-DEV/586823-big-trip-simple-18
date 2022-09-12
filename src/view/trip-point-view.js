@@ -1,11 +1,23 @@
 /* eslint-disable camelcase */
 import dayjs from 'dayjs';
-import {createElement} from '../render.js';
+import {
+  createElement
+} from '../render.js';
 
 const createTripPoint = (testTripPointData) => {
-  const {basePrice, dateFrom, dateTo, type} = testTripPointData;
-  const {name} = testTripPointData.destination;
-  const {price, title} = testTripPointData.offers[0];
+  const {
+    basePrice,
+    dateFrom,
+    dateTo,
+    type
+  } = testTripPointData;
+  const {
+    name
+  } = testTripPointData.destination;
+  const {
+    price,
+    title
+  } = testTripPointData.offers[0];
   return (`
   <li class="trip-events__item">
   <div class="event">
@@ -41,23 +53,24 @@ const createTripPoint = (testTripPointData) => {
 };
 
 export default class TripPointView {
+  #element = null;
+  #testTripPointData = null;
   constructor(testTripPointData) {
-    this.testTripPointData = testTripPointData;
+    this.#testTripPointData = testTripPointData;
   }
 
-  getTemplate() {
-    return createTripPoint(this.testTripPointData);
+  get template() {
+    return createTripPoint(this.#testTripPointData);
   }
 
-  getElement() {
-    if(!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
-
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

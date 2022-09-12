@@ -61,7 +61,6 @@ const generateTripPoint = (id) => {
   return point;
 };
 
-
 const generateTripPoints = (tripsCount) => {
   const TripPoints = [];
   for(let i = 0; i < tripsCount; i++) {
