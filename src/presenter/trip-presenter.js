@@ -1,7 +1,6 @@
 import TripPointsContainerView from '../view/trip-points-container-view.js';
 import TripPointView from '../view/trip-point-view.js';
 import TripPointsSortView from '../view/trip-points-sort-view.js';
-import NewTripPointView from '../view/new-trip-point-view.js';
 import NewTripPointOfferView from '../view/new-trip-point-offer-view';
 import NewTripPointDestinationView from '../view/new-trip-point-destination-view.js';
 import TripPointEditView from '../view/trip-point-edit-view.js';
@@ -18,20 +17,23 @@ import {
 export default class TripPresenter {
   #tripPointsComponent = new TripPointsContainerView();
   #tripPointSortComponent = new TripPointsSortView();
-  #tripPointCreatorComponent = new NewTripPointView();
   #loadingPage = new LoadingMessageView();
   #tripMainContainer = null;
 
   init(tripMainContainer, TripPointsData) {
     this.#tripMainContainer = tripMainContainer;
     render(this.#tripPointsComponent, this.#tripMainContainer);
-    render(this.#tripPointSortComponent, this.#tripMainContainer, RenderPosition.AFTERBEGIN);
+    render(
+      this.#tripPointSortComponent,
+      this.#tripMainContainer,
+      RenderPosition.AFTERBEGIN
+    );
 
     for (let i = 0; i < COUNT_OF_TRIP_POINTS; i++) {
       this.#renderPoint(new TripPointView(TripPointsData[i]));
     }
 
-    if(!(this.#tripPointsComponent.childNodes)) {
+    if (this.#tripPointsComponent.element.childNodes.length <= 0) {
       render(this.#loadingPage, this.#tripMainContainer);
     }
   }
@@ -44,31 +46,37 @@ export default class TripPresenter {
 
     render(newPoint, this.#tripPointsComponent.element);
 
-    render(new NewTripPointOfferView(), tripPointEditorComponent.element.querySelector('.event__details'), RenderPosition.AFTERBEGIN);
+    render(new NewTripPointOfferView(), tripPointEditorComponent.element.querySelector('.event__details'), RenderPosition.AFTERBEGI);
+
     render(new NewTripPointDestinationView(), tripPointEditorComponent.element.querySelector('.event__details'));
 
     const onEscKeyDown = (evt) => {
       if (evt.key === 'Escape' || evt.key === 'Esc') {
         evt.preventDefault();
-        tripPointEditorComponent.element.replaceWith(newPoint.element);
-        document.removeEventListener('keydown', onEscKeyDown);
+        onPointEditorClick(false);
       }
     };
 
+    function onPointEditorClick(isOpenning) {
+      if (isOpenning) {
+        newPoint.element.replaceWith(tripPointEditorComponent.element);
+        document.addEventListener('keydown', onEscKeyDown);
+      } else {
+        tripPointEditorComponent.element.replaceWith(newPoint.element);
+        document.removeEventListener('keydown', onEscKeyDown);
+      }
+    }
     pointEditorOpenerElement.addEventListener('click', () => {
-      newPoint.element.replaceWith(tripPointEditorComponent.element);
-      document.addEventListener('keydown', onEscKeyDown);
+      onPointEditorClick(true);
     });
 
     pointEditorCloserElement.addEventListener('click', () => {
-      tripPointEditorComponent.element.replaceWith(newPoint.element);
-      document.removeEventListener('keydown', onEscKeyDown);
+      onPointEditorClick(false);
     });
 
     pointEditorFormElement.addEventListener('submit', (evt) => {
       evt.preventDefault();
-      tripPointEditorComponent.element.replaceWith(newPoint.element);
-      document.removeEventListener('keydown', onEscKeyDown);
+      onPointEditorClick(false);
     });
   };
 }
