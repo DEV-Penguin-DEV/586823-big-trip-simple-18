@@ -1,7 +1,6 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
-const createNewTripPointOfferTemplate = () =>
-  (`
+const createNewTripPointOfferTemplate = () => (`
   <section class="event__section  event__section--offers">
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
@@ -54,21 +53,12 @@ const createNewTripPointOfferTemplate = () =>
   </section>
   `);
 
-export default class NewTripPointOfferView {
-  #element = null;
+export default class NewTripPointOfferView extends AbstractView {
+  constructor() {
+    super();
+  }
 
   get template() {
     return createNewTripPointOfferTemplate();
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

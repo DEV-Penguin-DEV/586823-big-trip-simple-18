@@ -1,7 +1,6 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
-const createTripPointEditTemplate = () =>
-  (`
+const createTripPointEditTemplate = () => (`
   <li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">
@@ -104,21 +103,27 @@ const createTripPointEditTemplate = () =>
   </li>
   `);
 
-export default class TripPointEditView {
-  #element = null;
+export default class TripPointEditView extends AbstractView {
+  constructor() {
+    super();
+  }
 
   get template() {
     return createTripPointEditTemplate();
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
+  setClickHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickHandler);
+  };
 
-  removeElement() {
-    this.#element = null;
-  }
+  setSubmitHandlerOnForm = (callback) => {
+    this._callback.click = callback;
+    this.element.querySelector('.event--edit').addEventListener('submit', this.#clickHandler);
+  };
+
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.click();
+  };
 }

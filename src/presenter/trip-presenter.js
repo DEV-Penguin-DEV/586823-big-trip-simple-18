@@ -40,9 +40,6 @@ export default class TripPresenter {
 
   #renderPoint = (newPoint) => {
     const tripPointEditorComponent = new TripPointEditView();
-    const pointEditorOpenerElement = newPoint.element.querySelector('.event__rollup-btn');
-    const pointEditorCloserElement = tripPointEditorComponent.element.querySelector('.event__rollup-btn');
-    const pointEditorFormElement = tripPointEditorComponent.element.querySelector('.event--edit');
 
     render(newPoint, this.#tripPointsComponent.element);
 
@@ -66,17 +63,10 @@ export default class TripPresenter {
         document.removeEventListener('keydown', onEscKeyDown);
       }
     }
-    pointEditorOpenerElement.addEventListener('click', () => {
-      onPointEditorClick(true);
-    });
+    newPoint.setClickHandler(() => onPointEditorClick(true));
 
-    pointEditorCloserElement.addEventListener('click', () => {
-      onPointEditorClick(false);
-    });
+    tripPointEditorComponent.setClickHandler(() => onPointEditorClick(false));
 
-    pointEditorFormElement.addEventListener('submit', (evt) => {
-      evt.preventDefault();
-      onPointEditorClick(false);
-    });
+    tripPointEditorComponent.setSubmitHandlerOnForm(() => onPointEditorClick(false));
   };
 }

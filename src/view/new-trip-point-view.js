@@ -1,7 +1,6 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
-const createNewTripPointTemplate = () =>
-  (`
+const createNewTripPointTemplate = () => (`
   <form class="event event--edit" action="#" method="post">
     <header class="event__header">
       <div class="event__type-wrapper">
@@ -99,21 +98,12 @@ const createNewTripPointTemplate = () =>
   </form>
   `);
 
-export default class NewTripPointView {
-  #element = null;
+export default class NewTripPointView extends AbstractView {
+  constructor() {
+    super();
+  }
 
   get template() {
     return createNewTripPointTemplate();
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }
