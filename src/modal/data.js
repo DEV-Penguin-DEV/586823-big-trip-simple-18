@@ -1,6 +1,19 @@
-import { getRandomNumber, getRandomArrayElement, getRandomDatePair} from '../utils.js';
+import { getRandomNumber, getRandomArrayElement, getRandomDatePair } from '../utils.js';
 import * as constants from '../constants.js';
 
+
+const generatePictures = () => {
+  const result = [];
+  for (let i = 0; i < constants.COUNT_OF_TRIP_POINTS_PICTURES; i++) {
+    result.push(
+      {
+        'src': `http://picsum.photos/300/200?r=${Math.random()}`,
+        'description': getRandomArrayElement(constants.TRIP_POINTS_DESCRIPTIONS)
+      }
+    );
+  }
+  return result;
+};
 
 const generateTripPointOffer = (id) => {
   const pointOffer = {
@@ -17,11 +30,11 @@ const generateTripPointOffers = (id) => {
   const usedDescriptions = [];
   const countOffers = getRandomNumber(1, constants.OFFER_DESCRIPTIONS.length);
 
-  for(let i = 0; i < countOffers; i++) {
+  for (let i = 0; i < countOffers; i++) {
     let offer;
     do {
       offer = generateTripPointOffer(id);
-    } while(usedDescriptions.indexOf(offer) !== -1);
+    } while (usedDescriptions.indexOf(offer) !== -1);
 
     offers[i] = offer;
     usedDescriptions[i] = offer.description;
@@ -35,12 +48,7 @@ const generateTripPointDestination = (id) => {
     'id': id,
     'description': getRandomArrayElement(constants.TRIP_POINTS_DESCRIPTIONS),
     'name': getRandomArrayElement(constants.CITYS),
-    'pictures': [
-      {
-        'src': `http://picsum.photos/300/200?r=${Math.random()}`,
-        'description': getRandomArrayElement(constants.TRIP_POINTS_DESCRIPTIONS)
-      }
-    ]
+    'pictures': generatePictures()
   };
 
   return pointDestination;
@@ -63,7 +71,7 @@ const generateTripPoint = (id) => {
 
 const generateTripPoints = (tripsCount) => {
   const TripPoints = [];
-  for(let i = 0; i < tripsCount; i++) {
+  for (let i = 0; i < tripsCount; i++) {
     const point = generateTripPoint(i);
     TripPoints.push(point);
   }
@@ -71,4 +79,4 @@ const generateTripPoints = (tripsCount) => {
   return TripPoints;
 };
 
-export {generateTripPoints};
+export { generateTripPoints };

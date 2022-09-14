@@ -1,28 +1,37 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
-const createNewTripPointDestinationTemplate = () => (`
+const generatePhoto = (pictures) => {
+  let result = '';
+  pictures.forEach((picture) => {
+    result += `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`;
+  });
+  return result;
+};
+
+const createNewTripPointDestinationTemplate = (tripPointData) => {
+  const { description, pictures } = tripPointData.destination;
+  return (`
   <section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    <p class="event__destination-description">Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.</p>
+    <p class="event__destination-description">${description}</p>
 
     <div class="event__photos-container">
       <div class="event__photos-tape">
-        <img class="event__photo" src="img/photos/1.jpg" alt="Event photo">
-        <img class="event__photo" src="img/photos/2.jpg" alt="Event photo">
-        <img class="event__photo" src="img/photos/3.jpg" alt="Event photo">
-        <img class="event__photo" src="img/photos/4.jpg" alt="Event photo">
-        <img class="event__photo" src="img/photos/5.jpg" alt="Event photo">
+    ${generatePhoto(pictures)}
       </div>
     </div>
   </section>
   `);
+};
 
 export default class NewTripPointDestinationView extends AbstractView {
-  constructor() {
+  #tripPointData = null;
+  constructor(tripPointData) {
     super();
+    this.#tripPointData = tripPointData;
   }
 
   get template() {
-    return createNewTripPointDestinationTemplate();
+    return createNewTripPointDestinationTemplate(this.#tripPointData);
   }
 }
