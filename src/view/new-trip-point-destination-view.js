@@ -1,12 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
-const generatePhoto = (pictures) => {
-  let result = '';
-  pictures.forEach((picture) => {
-    result += `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`;
-  });
-  return result;
-};
+const generatePhotosTemplate = (pictures) => pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`).join('');
 
 const createNewTripPointDestinationTemplate = (tripPointData) => {
   const { description, pictures } = tripPointData.destination;
@@ -17,7 +11,7 @@ const createNewTripPointDestinationTemplate = (tripPointData) => {
 
     <div class="event__photos-container">
       <div class="event__photos-tape">
-    ${generatePhoto(pictures)}
+    ${generatePhotosTemplate(pictures)}
       </div>
     </div>
   </section>

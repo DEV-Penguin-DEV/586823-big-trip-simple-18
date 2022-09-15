@@ -51,18 +51,18 @@ const createTripPoint = (testTripPointData) => {
 };
 
 export default class TripPointView extends AbstractView {
-  #testTripPointData = null;
+  #tripPointData = null;
   constructor(testTripPointData) {
     super();
-    this.#testTripPointData = testTripPointData;
+    this.#tripPointData = testTripPointData;
   }
 
   get template() {
-    return createTripPoint(this.#testTripPointData);
+    return createTripPoint(this.#tripPointData);
   }
 
-  get testTripPointData() {
-    return this.#testTripPointData;
+  get tripPointData() {
+    return this.#tripPointData;
   }
 
   setClickHandler = (callback) => {

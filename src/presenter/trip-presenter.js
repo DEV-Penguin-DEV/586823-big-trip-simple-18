@@ -39,13 +39,13 @@ export default class TripPresenter {
   }
 
   #renderPoint = (newPoint) => {
-    const tripPointEditorComponent = new TripPointEditView(newPoint.testTripPointData);
+    const tripPointEditorComponent = new TripPointEditView(newPoint.tripPointData);
 
     render(newPoint, this.#tripPointsComponent.element);
 
-    render(new NewTripPointOfferView(newPoint.testTripPointData), tripPointEditorComponent.element.querySelector('.event__details'), RenderPosition.AFTERBEGI);
+    render(new NewTripPointOfferView(newPoint.tripPointData), tripPointEditorComponent.element.querySelector('.event__details'), RenderPosition.AFTERBEGI);
 
-    render(new NewTripPointDestinationView(newPoint.testTripPointData), tripPointEditorComponent.element.querySelector('.event__details'));
+    render(new NewTripPointDestinationView(newPoint.tripPointData), tripPointEditorComponent.element.querySelector('.event__details'));
 
     const onEscKeyDown = (evt) => {
       if (evt.key === 'Escape' || evt.key === 'Esc') {

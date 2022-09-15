@@ -7,8 +7,8 @@ const generatePictures = () => {
   for (let i = 0; i < constants.COUNT_OF_TRIP_POINTS_PICTURES; i++) {
     result.push(
       {
-        'src': `http://picsum.photos/300/200?r=${Math.random()}`,
-        'description': getRandomArrayElement(constants.TRIP_POINTS_DESCRIPTIONS)
+        src: `http://picsum.photos/300/200?r=${Math.random()}`,
+        description: getRandomArrayElement(constants.TRIP_POINTS_DESCRIPTIONS)
       }
     );
   }
@@ -17,9 +17,9 @@ const generatePictures = () => {
 
 const generateTripPointOffer = (id) => {
   const pointOffer = {
-    'id': id,
-    'title': getRandomArrayElement(constants.OFFER_DESCRIPTIONS),
-    'price': getRandomNumber(constants.OfferPriceRange.MIN, constants.OfferPriceRange.MAX)
+    id: id,
+    title: getRandomArrayElement(constants.OFFER_DESCRIPTIONS),
+    price: getRandomNumber(constants.OfferPriceRange.MIN, constants.OfferPriceRange.MAX)
   };
 
   return pointOffer;
@@ -45,10 +45,10 @@ const generateTripPointOffers = (id) => {
 
 const generateTripPointDestination = (id) => {
   const pointDestination = {
-    'id': id,
-    'description': getRandomArrayElement(constants.TRIP_POINTS_DESCRIPTIONS),
-    'name': getRandomArrayElement(constants.CITYS),
-    'pictures': generatePictures()
+    id: id,
+    description: getRandomArrayElement(constants.TRIP_POINTS_DESCRIPTIONS),
+    name: getRandomArrayElement(constants.CITYS),
+    pictures: generatePictures()
   };
 
   return pointDestination;
@@ -57,13 +57,13 @@ const generateTripPointDestination = (id) => {
 const generateTripPoint = (id) => {
   const dates = getRandomDatePair();
   const point = {
-    'basePrice': getRandomNumber(constants.BasePriceRange.MIN, constants.BasePriceRange.MAX),
-    'dateFrom': dates.dateFrom,
-    'dateTo': dates.dateTo,
-    'destination': generateTripPointDestination(id),
-    'id': `${id}`,
-    'offers': generateTripPointOffers(id),
-    'type': getRandomArrayElement(constants.TRIP_POINT_TYPES)
+    basePrice: getRandomNumber(constants.BasePriceRange.MIN, constants.BasePriceRange.MAX),
+    dateFrom: dates.dateFrom,
+    dateTo: dates.dateTo,
+    destination: generateTripPointDestination(id),
+    id: `${id}`,
+    offers: generateTripPointOffers(id),
+    type: getRandomArrayElement(constants.TRIP_POINT_TYPES)
   };
 
   return point;
