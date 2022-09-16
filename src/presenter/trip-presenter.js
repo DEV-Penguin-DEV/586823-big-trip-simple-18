@@ -1,10 +1,8 @@
 import TripPointsContainerView from '../view/trip-points-container-view.js';
 import TripPointView from '../view/trip-point-view.js';
 import TripPointsSortView from '../view/trip-points-sort-view.js';
-import NewTripPointOfferView from '../view/new-trip-point-offer-view';
-import NewTripPointDestinationView from '../view/new-trip-point-destination-view.js';
-import TripPointEditView from '../view/trip-point-edit-view.js';
 import LoadingMessageView from '../view/loading-message-view.js';
+import PointPresenter from './point-presenter.js';
 
 import {
   render,
@@ -19,54 +17,45 @@ export default class TripPresenter {
   #tripPointSortComponent = new TripPointsSortView();
   #loadingPage = new LoadingMessageView();
   #tripMainContainer = null;
+  #pointsPresentors = new Map();
 
   init(tripMainContainer, TripPointsData) {
     this.#tripMainContainer = tripMainContainer;
-    render(this.#tripPointsComponent, this.#tripMainContainer);
-    render(
-      this.#tripPointSortComponent,
-      this.#tripMainContainer,
-      RenderPosition.AFTERBEGIN
-    );
+
+    this.#renderPointsComponent();
+
+    this.#renderPointSortComponent();
 
     for (let i = 0; i < COUNT_OF_TRIP_POINTS; i++) {
-      this.#renderPoint(new TripPointView(TripPointsData[i]));
+      this.#renderPoint(TripPointsData[i]);
     }
 
     if (this.#tripPointsComponent.element.childNodes.length <= 0) {
-      render(this.#loadingPage, this.#tripMainContainer);
+      this.#renderLoadingPage();
     }
   }
 
-  #renderPoint = (newPoint) => {
-    const tripPointEditorComponent = new TripPointEditView(newPoint.tripPointData);
+  #renderPointsComponent() {
+    render(this.#tripPointsComponent, this.#tripMainContainer);
+  }
 
-    render(newPoint, this.#tripPointsComponent.element);
+  #renderPointSortComponent() {
+    render(this.#tripPointSortComponent, this.#tripMainContainer, RenderPosition.AFTERBEGIN);
+  }
 
-    render(new NewTripPointOfferView(newPoint.tripPointData), tripPointEditorComponent.element.querySelector('.event__details'), RenderPosition.AFTERBEGI);
+  #renderLoadingPage() {
+    render(this.#loadingPage, this.#tripMainContainer);
+  }
 
-    render(new NewTripPointDestinationView(newPoint.tripPointData), tripPointEditorComponent.element.querySelector('.event__details'));
+  #renderPoint(point) {
+    const pointPresenter = new PointPresenter(this.#tripPointsComponent);
+    pointPresenter.init(new TripPointView(point), this.#resetAllPoints);
+    this.#pointsPresentors.set(Number(point.id), pointPresenter);
+  }
 
-    const onEscKeyDown = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        onPointEditorClick(false);
-      }
-    };
-
-    function onPointEditorClick(isOpenning) {
-      if (isOpenning) {
-        newPoint.element.replaceWith(tripPointEditorComponent.element);
-        document.addEventListener('keydown', onEscKeyDown);
-      } else {
-        tripPointEditorComponent.element.replaceWith(newPoint.element);
-        document.removeEventListener('keydown', onEscKeyDown);
-      }
-    }
-    newPoint.setClickHandler(() => onPointEditorClick(true));
-
-    tripPointEditorComponent.setClickHandler(() => onPointEditorClick(false));
-
-    tripPointEditorComponent.setSubmitHandlerOnForm(() => onPointEditorClick(false));
+  #resetAllPoints = () => {
+    this.#pointsPresentors.forEach((pointPresentor) => {
+      pointPresentor.resetView();
+    });
   };
 }
