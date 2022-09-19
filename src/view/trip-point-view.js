@@ -17,7 +17,7 @@ const createTripPoint = (testTripPointData) => {
     title
   } = testTripPointData.offers[0];
   return (`
-  <li class="trip-events__item">
+  <li class="trip-events__item" data-offers-count="${testTripPointData.offers.length}">
   <div class="event">
     <time class="event__date" datetime="${dateFrom}">${dayjs(dateFrom).format('DD MMM')}</time>
     <div class="event__type">

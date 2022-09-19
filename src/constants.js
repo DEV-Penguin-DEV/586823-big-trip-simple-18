@@ -16,4 +16,12 @@ const BasePriceRange = {
 const COUNT_OF_TRIP_POINTS = 3;
 const COUNT_OF_TRIP_POINTS_PICTURES = 5;
 
-export { CITYS, TRIP_POINTS_DESCRIPTIONS, TRIP_POINT_TYPES, OFFER_DESCRIPTIONS, OfferPriceRange, BasePriceRange, COUNT_OF_TRIP_POINTS, COUNT_OF_TRIP_POINTS_PICTURES };
+const sortType = {
+  DAY: 'day',
+  EVENT: 'event',
+  TIME: 'time',
+  PRICE: 'price',
+  OFFERS: 'offers'
+};
+
+export { CITYS, TRIP_POINTS_DESCRIPTIONS, TRIP_POINT_TYPES, OFFER_DESCRIPTIONS, OfferPriceRange, BasePriceRange, COUNT_OF_TRIP_POINTS, COUNT_OF_TRIP_POINTS_PICTURES, sortType };
