@@ -15,7 +15,6 @@ export default class PointPresenter {
   }
 
   init(point, resetAllView) {
-    resetAllView();
     this.#point = point;
 
     this.#tripPointEditorComponent = new TripPointEditView(
@@ -66,6 +65,4 @@ export default class PointPresenter {
       this.#isEditing = false;
     }
   }
-
-
 }

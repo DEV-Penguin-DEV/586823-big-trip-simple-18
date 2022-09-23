@@ -1,9 +1,9 @@
 import dayjs from 'dayjs';
 
 const getRandomNumber = (from = 0, to = 1) => {
-  if(from < 0 || to < 0) {return 0;}
-  if(from === to) {return from;}
-  if(from > to) {return 0;}
+  if (from < 0 || to < 0) { return 0; }
+  if (from === to) { return from; }
+  if (from > to) { return 0; }
 
   return Math.round(Math.random() * (to - from) + from);
 };
@@ -22,4 +22,4 @@ const getRandomDatePair = () => {
   return dates;
 };
 
-export{getRandomNumber, getRandomArrayElement, getRandomDatePair};
+export { getRandomNumber, getRandomArrayElement, getRandomDatePair };
