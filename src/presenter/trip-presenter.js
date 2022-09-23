@@ -9,6 +9,7 @@ import {
   RenderPosition
 } from '../render.js';
 import {
+  SortType,
   COUNT_OF_TRIP_POINTS
 } from '../constants.js';
 import dayjs from 'dayjs';
@@ -68,23 +69,23 @@ export default class TripPresenter {
     this.#checkedSortType = sortType;
 
     switch (this.#checkedSortType) {
-      case 'day':
+      case SortType.DAY:
         this.#daySorting();
         break;
 
-      case 'event':
+      case SortType.EVENT:
         this.#eventSorting();
         break;
 
-      case 'time':
+      case SortType.TIME:
         this.#timeSorting();
         break;
 
-      case 'price':
+      case SortType.PRICE:
         this.#priceSorting();
         break;
 
-      case 'offers':
+      case SortType.OFFERS:
         this.#offersSorting();
         break;
     }
