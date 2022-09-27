@@ -1,4 +1,4 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
 const generatePhotosTemplate = (pictures) => pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`).join('');
 
@@ -18,7 +18,7 @@ const createNewTripPointDestinationTemplate = (tripPointData) => {
   `);
 };
 
-export default class NewTripPointDestinationView extends AbstractView {
+export default class NewTripPointDestinationView extends AbstractStatefulView {
   #tripPointData = null;
   constructor(tripPointData) {
     super();
