@@ -15,7 +15,7 @@ const createNewTripPointDestinationTemplate = (tripPointData) => {
 
     <div class="event__photos-container">
       <div class="event__photos-tape">
-    ${generatePhotosTemplate(pictures)}
+      ${generatePhotosTemplate(pictures)}
       </div>
     </div>
   </section>
