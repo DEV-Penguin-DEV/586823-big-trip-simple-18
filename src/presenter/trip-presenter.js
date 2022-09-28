@@ -24,7 +24,7 @@ export default class TripPresenter {
   #checkedSortType = 'price';
   #tripPointsData = null;
 
-  init(tripMainContainer, tripPointsData) {
+  init(tripMainContainer, tripPointsData, offersByTypes) {
     this.#tripMainContainer = tripMainContainer;
     this.#tripPointsData = tripPointsData;
 
@@ -33,8 +33,10 @@ export default class TripPresenter {
     this.#renderPointSortComponent();
 
     for (let i = 0; i < COUNT_OF_TRIP_POINTS; i++) {
-      this.#renderPoint(this.#tripPointsData[i]);
+      this.#renderPoint(this.#tripPointsData[i], offersByTypes);
     }
+
+    this.#setNewTripPointButton(this.#tripPointsData[0], offersByTypes);
 
     this.#sorting(null, true);
 
@@ -150,10 +152,19 @@ export default class TripPresenter {
     render(this.#loadingPage, this.#tripMainContainer);
   }
 
-  #renderPoint(point) {
+  #setNewTripPointButton(point, offersByTypes) {
+    document.querySelector('.trip-main__event-add-btn').addEventListener('click', () => {
+      const newTripPointPresenter = new PointPresenter(this.#tripPointsComponent);
+      newTripPointPresenter.init(new TripPointView(point), this.#resetAllPoints, offersByTypes, true);
+      newTripPointPresenter.onNewPointButtonClick(true, this.#resetAllPoints);
+      this.#pointsPresentors.set(this.#pointsPresentors.length + 1, newTripPointPresenter);
+    });
+  }
+
+  #renderPoint(point, offersByTypes) {
     const pointPresenter = new PointPresenter(this.#tripPointsComponent);
     const pointView = new TripPointView(point);
-    pointPresenter.init(pointView, this.#resetAllPoints);
+    pointPresenter.init(pointView, this.#resetAllPoints, offersByTypes);
     this.#pointsViews.push(pointView);
     this.#pointsPresentors.set(Number(point.id), pointPresenter);
   }

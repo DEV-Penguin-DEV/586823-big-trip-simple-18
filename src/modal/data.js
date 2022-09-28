@@ -15,9 +15,8 @@ const generatePictures = () => {
   return result;
 };
 
-const generateTripPointOffer = (id) => {
+const generateTripPointOffer = () => {
   const pointOffer = {
-    id: id,
     title: getRandomArrayElement(constants.OFFER_DESCRIPTIONS),
     price: getRandomNumber(constants.OfferPriceRange.MIN, constants.OfferPriceRange.MAX)
   };
@@ -25,22 +24,29 @@ const generateTripPointOffer = (id) => {
   return pointOffer;
 };
 
-const generateTripPointOffers = (id) => {
-  const offers = [];
-  const usedDescriptions = [];
-  const countOffers = getRandomNumber(1, constants.OFFER_DESCRIPTIONS.length);
+const generateTripPointOffers = () => {
+  const offersByTypes = {};
 
-  for (let i = 0; i < countOffers; i++) {
-    let offer;
-    do {
-      offer = generateTripPointOffer(id);
-    } while (usedDescriptions.indexOf(offer) !== -1);
+  constants.TRIP_POINT_TYPES.forEach((type) => {
+    const offers = [];
+    const usedDescriptions = [];
+    const countOffers = getRandomNumber(1, constants.OFFER_DESCRIPTIONS.length);
 
-    offers[i] = offer;
-    usedDescriptions[i] = offer.description;
-  }
+    for (let i = 0; i < countOffers; i++) {
+      let offer;
+      do {
+        offer = generateTripPointOffer();
+      } while (usedDescriptions.indexOf(offer) !== -1);
 
-  return offers;
+      offers[i] = offer;
+      usedDescriptions[i] = offer.description;
+    }
+
+    offersByTypes[type] = offers;
+  });
+
+
+  return offersByTypes;
 };
 
 const generateTripPointDestination = (id) => {
@@ -62,21 +68,22 @@ const generateTripPoint = (id) => {
     dateTo: dates.dateTo,
     destination: generateTripPointDestination(id),
     id: `${id}`,
-    offers: generateTripPointOffers(id),
+    offers: [],
     type: getRandomArrayElement(constants.TRIP_POINT_TYPES)
   };
 
   return point;
 };
 
-const generateTripPoints = (tripsCount) => {
+const generateTripPoints = (tripsCount, offersByTypes) => {
   const TripPoints = [];
   for (let i = 0; i < tripsCount; i++) {
     const point = generateTripPoint(i);
+    point.offers = offersByTypes[point.type];
     TripPoints.push(point);
   }
 
   return TripPoints;
 };
 
-export { generateTripPoints };
+export { generateTripPoints, generateTripPointOffers };

@@ -7,4 +7,4 @@ const tripPresenter = new TripPresenter();
 
 const modal = new Modal();
 
-tripPresenter.init(mainContainerElement, modal.tripPoints);
+tripPresenter.init(mainContainerElement, modal.tripPoints, modal.offersByTypes);
