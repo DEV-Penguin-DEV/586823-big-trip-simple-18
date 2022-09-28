@@ -171,7 +171,7 @@ export default class TripPresenter {
 
   #resetAllPoints = () => {
     this.#pointsPresentors.forEach((pointPresentor) => {
-      pointPresentor._resetView();
+      pointPresentor.resetView();
     });
   };
 }

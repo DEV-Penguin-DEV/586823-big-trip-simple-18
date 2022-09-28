@@ -131,10 +131,10 @@ const createTripPointEditTemplate = (tripPointData) => {
 
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dayjs(dateFrom).format('DD/MM/YY HH:mm')}">
+          <input class="event__input  event__input--time event__input--time-start" id="event-start-time-1" type="text" name="event-start-time" value="${dayjs(dateFrom).format('DD/MM/YY HH:mm')}">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">To</label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dayjs(dateTo).format('DD/MM/YY HH:mm')}">
+          <input class="event__input  event__input--time event__input--time-end" id="event-end-time-1" type="text" name="event-end-time" value="${dayjs(dateTo).format('DD/MM/YY HH:mm')}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -161,7 +161,8 @@ const createTripPointEditTemplate = (tripPointData) => {
 };
 
 export default class TripPointEditView extends AbstractStatefulView {
-  #dataPicker = null;
+  #dataToPicker = null;
+  #dataFromPicker = null;
   #offersByTypes = null;
   constructor(tripPointData, offersByTypes) {
     super();
@@ -173,9 +174,14 @@ export default class TripPointEditView extends AbstractStatefulView {
   removeElement = () => {
     super.removeElement();
 
-    if (this.#dataPicker) {
-      this.#dataPicker.destroy();
-      this.#dataPicker = null;
+    if (this.#dataToPicker) {
+      this.#dataToPicker.destroy();
+      this.#dataToPicker = null;
+    }
+
+    if (this.#dataFromPicker) {
+      this.#dataFromPicker.destroy();
+      this.#dataFromPicker = null;
     }
   };
 
@@ -191,10 +197,53 @@ export default class TripPointEditView extends AbstractStatefulView {
     });
   };
 
+  #onFromTimeChange = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate,
+    });
+  };
+
+  #onToTimeChange = ([userDate]) => {
+    this.updateElement({
+      dateTo: dayjs(userDate),
+    });
+  };
+
   #setInnerHandler() {
     this.element.querySelector('.event__type-group').addEventListener('click', this.#onTypesElementClick);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onDestinationChange);
+    this.#setDataToPicker();
+    this.#setDataFromPicker();
   }
+
+  #setDataToPicker = () => {
+    this.#dataToPicker = flatpickr(
+      this.element.querySelector('.event__input--time-end'),
+      {
+        minDate: new Date(this._state.dateFrom),
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateTo,
+        onChange: this.#onToTimeChange,
+        enableTime: true,
+        // eslint-disable-next-line camelcase
+        time_24hr: true
+      },
+    );
+  };
+
+  #setDataFromPicker = () => {
+    this.#dataToPicker = flatpickr(
+      this.element.querySelector('.event__input--time-start'),
+      {
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateFrom,
+        onChange: this.#onFromTimeChange,
+        enableTime: true,
+        // eslint-disable-next-line camelcase
+        time_24hr: true
+      },
+    );
+  };
 
   setClickHandler = (callback) => {
     this._callback.click = callback;
