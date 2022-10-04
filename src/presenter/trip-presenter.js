@@ -101,7 +101,6 @@ export default class TripPresenter {
 
     if (isDefaultSorting) {
       sortType = DEFAULT_SORT_TYPE;
-      document.querySelector('#sort-price').checked = true;
     } else {
       const typeInput = evt.target;
       sortType = typeInput.dataset.sortType;
