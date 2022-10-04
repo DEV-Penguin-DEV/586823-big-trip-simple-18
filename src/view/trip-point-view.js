@@ -3,21 +3,11 @@ import dayjs from 'dayjs';
 import AbstractView from '../framework/view/abstract-view.js';
 
 const createTripPoint = (testTripPointData) => {
-  const {
-    basePrice,
-    dateFrom,
-    dateTo,
-    type
-  } = testTripPointData;
-  const {
-    name
-  } = testTripPointData.destination;
-  const {
-    price,
-    title
-  } = testTripPointData.offers[0];
+  const { basePrice, dateFrom, dateTo, type } = testTripPointData;
+  const { name } = testTripPointData.destination;
+  const { price, title } = testTripPointData.offers[0];
   return (`
-  <li class="trip-events__item" data-offers-count="${testTripPointData.offers.length}">
+  <li class="trip-events__item">
   <div class="event">
     <time class="event__date" datetime="${dateFrom}">${dayjs(dateFrom).format('DD MMM')}</time>
     <div class="event__type">
