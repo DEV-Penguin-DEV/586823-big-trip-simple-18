@@ -71,7 +71,7 @@ export default class Model extends Observable {
     }
 
     try {
-      const response = await this.#pointsApi.updateTask(update);
+      const response = await this.#pointsApi.updatePoint(update);
       const updatedPoint = this.#adaptToClient(response);
 
       this.#tripPoints = [
