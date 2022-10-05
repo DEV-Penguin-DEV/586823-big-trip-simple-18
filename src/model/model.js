@@ -85,27 +85,37 @@ export default class Model extends Observable {
     }
   };
 
-  addPoint = (updateType, update) => {
-    this.#tripPoints = [
-      update,
-      ...this.#tripPoints,
-    ];
+  addPoint = async (updateType, update) => {
+    try {
+      const response = await this.#pointsApi.addPoint(update);
+      const updatedPoint = this.#adaptToClient(response);
 
-    this._notify(updateType, update);
+      this.#tripPoints = [
+        update,
+        ...this.#tripPoints,
+      ];
+      this._notify(updateType, updatedPoint);
+    } catch (err) {
+      throw new Error('Can\'t update task');
+    }
   };
 
-  deletePoint = (updateType, update) => {
+  deletePoint = async (updateType, update) => {
     const index = this.#tripPoints.findIndex((point) => point.id === update.id);
 
     if (index === -1) {
-      throw new Error('Can\'t delete unexisting point');
+      throw new Error('Can\'t update unexisting point');
     }
 
-    this.#tripPoints = [
-      ...this.#tripPoints.slice(0, index),
-      ...this.#tripPoints.slice(index + 1),
-    ];
-
-    this._notify(updateType);
+    try {
+      await this.#pointsApi.deletePoint(update);
+      this.#tripPoints = [
+        ...this.#tripPoints.slice(0, index),
+        ...this.#tripPoints.slice(index + 1),
+      ];
+      this._notify(updateType);
+    } catch (err) {
+      throw new Error('Can\'t update task');
+    }
   };
 }

@@ -23,7 +23,6 @@ export default class NewPointPresenter {
 
   init(point, offersByTypes, destinations, resetAllView, handlePointChange) {
     this.#point = point;
-    this.#point.tripPointData.id = Math.round(100 * Math.random());
     this.#destinations = destinations;
     this.#offersByTypes = offersByTypes;
     this.#tripPointEditorComponent = new TripPointEditView(this.#point.tripPointData, this.#offersByTypes, this.#destinations);
@@ -38,6 +37,7 @@ export default class NewPointPresenter {
     this.#tripPointEditorComponent.setClickHandler(() => this.onNewPointButtonClick(false));
 
     this.#tripPointEditorComponent.setSaveClickHandler(this.#handleAddClick);
+    this.#tripPointEditorComponent.setDeleteClickHandler(() => this.onNewPointButtonClick(false));
   };
 
   #onEscKeyDown = (evt) => {
@@ -65,6 +65,8 @@ export default class NewPointPresenter {
   }
 
   #handleAddClick = (point) => {
+    document.querySelector('.event__save-btn').textContent = 'Saving...';
+    document.querySelector('.event__save-btn').disabled = true;
     this.#handlePointChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,

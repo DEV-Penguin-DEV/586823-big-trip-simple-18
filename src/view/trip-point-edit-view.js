@@ -230,6 +230,8 @@ export default class TripPointEditView extends AbstractStatefulView {
 
   #formSaveClickHandler = (evt) => {
     evt.preventDefault();
+    document.querySelector('.event__save-btn').textContent = 'Saving...';
+    document.querySelector('.event__save-btn').disabled = true;
     this._callback.saveClick(TripPointEditView.parseStateToPoint(this._state));
   };
 
@@ -240,6 +242,8 @@ export default class TripPointEditView extends AbstractStatefulView {
 
   #formDeleteClickHandler = (evt) => {
     evt.preventDefault();
+    document.querySelector('.event__reset-btn').textContent = 'Deleting...';
+    document.querySelector('.event__reset-btn').disabled = true;
     this._callback.deleteClick(TripPointEditView.parseStateToPoint(this._state));
   };
 
