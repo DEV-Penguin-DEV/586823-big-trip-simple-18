@@ -1,11 +1,55 @@
-import { generateTripPoints, generateTripPointOffers, generateTripPointDestinations } from './data.js';
-import { COUNT_OF_TRIP_POINTS } from '../constants.js';
 import Observable from '../framework/observable.js';
+import dayjs from 'dayjs';
+import { UpdateType } from '../constants.js';
 
 export default class Model extends Observable {
-  #destinations = generateTripPointDestinations();
-  #offersByTypes = generateTripPointOffers();
-  #tripPoints = generateTripPoints(COUNT_OF_TRIP_POINTS, this.#offersByTypes, this.#destinations);
+  #pointsApi = null;
+  #offersApi = null;
+  #destinationsApi = null;
+
+  constructor(pointsApi, offersApi, destinationsApi) {
+    super();
+    this.#pointsApi = pointsApi;
+    this.#offersApi = offersApi;
+    this.#destinationsApi = destinationsApi;
+  }
+
+  #destinations = [];
+  #offersByTypes = [];
+  #tripPoints = [];
+
+  init = async () => {
+    try {
+      const tripPoints = await this.#pointsApi.points;
+      this.#tripPoints = tripPoints.map(this.#adaptToClient);
+
+      this.#offersByTypes = await this.#offersApi.offers;
+
+      this.#destinations = await this.#destinationsApi.destinations;
+    } catch (error) {
+      this.#tripPoints = [];
+
+      this.#offersByTypes = [];
+
+      this.#destinations = [];
+    }
+
+    this._notify(UpdateType.INIT);
+  };
+
+  #adaptToClient(point) {
+    const adaptedPoint = {
+      ...point,
+      basePrice: point['base_price'],
+      dateFrom: dayjs(point['date_from']),
+      dateTo: dayjs(point['date_to']),
+    };
+
+    delete adaptedPoint['base_price'];
+    delete adaptedPoint['date_from'];
+    delete adaptedPoint['date_to'];
+    return adaptedPoint;
+  }
 
   get tripPoints() {
     return this.#tripPoints;
@@ -19,20 +63,26 @@ export default class Model extends Observable {
     return this.#destinations;
   }
 
-  updatePoint = (updateType, update) => {
+  updatePoint = async (updateType, update) => {
     const index = this.#tripPoints.findIndex((point) => point.id === update.id);
 
     if (index === -1) {
       throw new Error('Can\'t update unexisting point');
     }
 
-    this.#tripPoints = [
-      ...this.#tripPoints.slice(0, index),
-      update,
-      ...this.#tripPoints.slice(index + 1),
-    ];
+    try {
+      const response = await this.#pointsApi.updateTask(update);
+      const updatedPoint = this.#adaptToClient(response);
 
-    this._notify(updateType, update);
+      this.#tripPoints = [
+        ...this.#tripPoints.slice(0, index),
+        update,
+        ...this.#tripPoints.slice(index + 1),
+      ];
+      this._notify(updateType, updatedPoint);
+    } catch (err) {
+      throw new Error('Can\'t update task');
+    }
   };
 
   addPoint = (updateType, update) => {
