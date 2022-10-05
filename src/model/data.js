@@ -45,19 +45,37 @@ const generateTripPointOffers = () => {
     offersByTypes[type] = offers;
   });
 
-
   return offersByTypes;
 };
 
-const generateTripPointDestination = (id) => {
+const generateTripPointDestination = (i) => {
   const pointDestination = {
-    id: id,
+    id: i,
     description: getRandomArrayElement(constants.TRIP_POINTS_DESCRIPTIONS),
-    name: getRandomArrayElement(constants.CITYS),
+    name: constants.CITYS[i],
     pictures: generatePictures()
   };
 
   return pointDestination;
+};
+
+const generateTripPointDestinations = () => {
+  const destinations = [];
+
+  constants.CITYS.forEach((name, i) => {
+    const usedNames = [];
+
+    let destination;
+    do {
+      destination = generateTripPointDestination(i);
+    } while (usedNames.indexOf(destination.name) !== -1);
+
+    usedNames[i] = destination.name;
+
+    destinations[i] = destination;
+  });
+
+  return destinations;
 };
 
 const generateTripPoint = (id) => {
@@ -66,7 +84,7 @@ const generateTripPoint = (id) => {
     basePrice: getRandomNumber(constants.BasePriceRange.MIN, constants.BasePriceRange.MAX),
     dateFrom: dates.dateFrom,
     dateTo: dates.dateTo,
-    destination: generateTripPointDestination(id),
+    destination: {},
     id: `${id}`,
     offers: [],
     type: getRandomArrayElement(constants.TRIP_POINT_TYPES)
@@ -75,10 +93,11 @@ const generateTripPoint = (id) => {
   return point;
 };
 
-const generateTripPoints = (tripsCount, offersByTypes) => {
+const generateTripPoints = (tripsCount, offersByTypes, destinations) => {
   const TripPoints = [];
   for (let i = 0; i < tripsCount; i++) {
     const point = generateTripPoint(i);
+    point.destination = destinations[i];
     point.offers = offersByTypes[point.type];
     TripPoints.push(point);
   }
@@ -86,4 +105,4 @@ const generateTripPoints = (tripsCount, offersByTypes) => {
   return TripPoints;
 };
 
-export { generateTripPoints, generateTripPointOffers };
+export { generateTripPoints, generateTripPointOffers, generateTripPointDestinations };

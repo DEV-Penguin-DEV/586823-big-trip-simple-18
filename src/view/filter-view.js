@@ -1,0 +1,43 @@
+import AbstractView from '../framework/view/abstract-view.js';
+import { FilterType } from '../constants.js';
+
+const createFilterViewTemplate = () => (`
+    <div class="trip-controls__filters">
+      <h2 class="visually-hidden">Filter events</h2>
+      <form class="trip-filters" action="#" method="get">
+        <div class="trip-filters__filter">
+          <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything" data-filter-type="${FilterType.EVERYTHING}">
+          <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
+        </div>
+
+        <div class="trip-filters__filter">
+          <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future" data-filter-type="${FilterType.FUTURE}">
+          <label class="trip-filters__filter-label" for="filter-future">Future</label>
+        </div>
+
+        <button class="visually-hidden" type="submit">Accept filter</button>
+      </form>
+    </div>
+  `);
+
+export default class FilterView extends AbstractView {
+  constructor() {
+    super();
+  }
+
+  get template() {
+    return createFilterViewTemplate();
+  }
+
+  setClickHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.addEventListener('click', this.#clickHandler);
+  };
+
+  #clickHandler = (evt) => {
+    if (!(evt.target.classList.contains('trip-filters__filter-input'))) {
+      return;
+    }
+    this._callback.click(evt);
+  };
+}

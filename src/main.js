@@ -1,10 +1,10 @@
 import TripPresenter from './presenter/trip-presenter.js';
-import Modal from './modal/modal.js';
+import Model from './model/model.js';
 
 const mainContainerElement = document.querySelector('.trip-events');
 
-const tripPresenter = new TripPresenter();
+const model = new Model();
 
-const modal = new Modal();
+const tripPresenter = new TripPresenter(mainContainerElement, model);
 
-tripPresenter.init(mainContainerElement, modal.tripPoints, modal.offersByTypes);
+tripPresenter.init();

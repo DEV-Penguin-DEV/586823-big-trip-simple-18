@@ -16,7 +16,7 @@ const getRandomDatePair = () => {
     dateTo: ''
   };
 
-  dates.dateFrom = dayjs().add(getRandomNumber(1, 7), 'day');
+  dates.dateFrom = dayjs().add(getRandomNumber(1, 7), 'day').add(getRandomNumber(1, 23), 'hour');
   dates.dateTo = dates.dateFrom.add(getRandomNumber(1, 7), 'day').add(getRandomNumber(1, 23), 'hour');
 
   return dates;

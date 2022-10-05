@@ -1,52 +1,49 @@
 import TripPointEditView from '../view/trip-point-edit-view.js';
 
 
-import { render, RenderPosition } from '../render.js';
+import { render, remove } from '../framework/render';
+import { UserAction, UpdateType } from '../constants.js';
 
 export default class PointPresenter {
   #point = null;
   #offersByTypes = null;
+  #destinations = null;
   #tripPointsComponent = null;
   #tripPointEditorComponent = null;
   #isEditing = false;
-  #isNew = false;
   #resetAllView = null;
+  #handlePointChange = null;
 
   constructor(tripPointsComponent) {
     this.#tripPointsComponent = tripPointsComponent;
   }
 
-  init(point, resetAllView, offersByTypes, isNew = false) {
-    this.#isNew = isNew;
+  destroy = () => {
+    remove(this.#point);
+    remove(this.#tripPointEditorComponent);
+  };
+
+  init(point, offersByTypes, destinations, resetAllView, handlePointChange) {
     this.#point = point;
+    this.#destinations = destinations;
     this.#offersByTypes = offersByTypes;
+    this.#handlePointChange = handlePointChange;
     this.#tripPointEditorComponent = new TripPointEditView(
-      this.#point.tripPointData, this.#offersByTypes
+      this.#point.tripPointData, this.#offersByTypes, this.#destinations
     );
     this.#resetAllView = resetAllView;
-
+    render(this.#point, this.#tripPointsComponent.element);
     this.#resetHandlers();
   }
 
   #resetHandlers = () => {
-    if (!this.#isNew) {
-      render(this.#point, this.#tripPointsComponent.element);
-      this.#point.setClickHandler(() => this.#onPointEditorClick(true, this.#resetAllView));
+    this.#point.setClickHandler(() => this.#onPointEditorClick(true, this.#resetAllView));
 
-      this.#tripPointEditorComponent.setClickHandler(() => this.#onPointEditorClick(false, this.#resetAllView));
+    this.#tripPointEditorComponent.setClickHandler(() => this.#onPointEditorClick(false));
 
-      this.#tripPointEditorComponent.setSubmitHandlerOnForm(() =>
-        this.#onPointEditorClick(false, this.#resetAllView)
-      );
-    } else {
-      this.#point.setClickHandler(() => this.onNewPointButtonClick(true, this.#resetAllView));
+    this.#tripPointEditorComponent.setDeleteClickHandler(this.#handleDeleteClick);
 
-      this.#tripPointEditorComponent.setClickHandler(() => this.onNewPointButtonClick(false, this.#resetAllView));
-
-      this.#tripPointEditorComponent.setSubmitHandlerOnForm(() =>
-        this.onNewPointButtonClick(false, this.#resetAllView)
-      );
-    }
+    this.#tripPointEditorComponent.setSaveClickHandler(this.#handleSaveClick);
   };
 
   #onEscKeyDown = (evt) => {
@@ -58,18 +55,14 @@ export default class PointPresenter {
 
   resetView() {
     if (this.#isEditing) {
-      if (!this.#isNew) {
-        this.#onPointEditorClick(false);
-      } else {
-        this.onNewPointButtonClick(false);
-      }
+      this.#onPointEditorClick(false);
     }
   }
 
-  #onPointEditorClick(isOpenning, resetViews) {
+  #onPointEditorClick(isOpenning, resetViews = null) {
     if (isOpenning) {
       this.#tripPointEditorComponent = new TripPointEditView(
-        this.#point.tripPointData, this.#offersByTypes
+        this.#point.tripPointData, this.#offersByTypes, this.#destinations
       );
       resetViews();
       this.#point.element.replaceWith(this.#tripPointEditorComponent.element);
@@ -83,16 +76,20 @@ export default class PointPresenter {
     }
   }
 
-  onNewPointButtonClick(isOpenning, resetViews) {
-    if (isOpenning) {
-      resetViews();
-      render(this.#tripPointEditorComponent, this.#tripPointsComponent.element, RenderPosition.AFTERBEGIN);
-      document.addEventListener('keydown', this.#onEscKeyDown);
-      this.#isEditing = true;
-    } else {
-      this.#tripPointEditorComponent.element.replaceWith('');
-      document.removeEventListener('keydown', this.#onEscKeyDown);
-      this.#isEditing = false;
-    }
-  }
+  #handleDeleteClick = (point) => {
+    this.#handlePointChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
+  };
+
+  #handleSaveClick = (point) => {
+    this.#handlePointChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
+    this.#onPointEditorClick(false);
+  };
 }
