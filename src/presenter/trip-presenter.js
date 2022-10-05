@@ -17,7 +17,6 @@ import dayjs from 'dayjs';
 export default class TripPresenter {
   #tripPointsComponent = new TripPointsContainerView();
   #tripPointSortComponent = new TripPointsSortView();
-  #loadingPage = new LoadingMessageView();
   #tripMainContainer = null;
   #pointsPresentors = new Map();
   #checkedSortType = DEFAULT_SORT_TYPE;
@@ -85,13 +84,19 @@ export default class TripPresenter {
         this.clearPoints();
         this.#renderBoard();
         break;
+      case UpdateType.INIT:
+        this.clearPoints();
+        this.#renderBoard();
+        if (document.querySelector('.trip-events__msg') !== null) {
+          document.querySelector('.trip-events__msg').remove();
+        }
+        break;
     }
   };
 
   #renderPointsComponent() {
     render(this.#tripPointsComponent, this.#tripMainContainer);
     this.#renderPoints(this.points);
-
     if (this.#tripPointsComponent.element.childNodes.length <= 0) {
       this.#renderLoadingPage();
     }
@@ -163,7 +168,7 @@ export default class TripPresenter {
   };
 
   #renderLoadingPage() {
-    render(this.#loadingPage, this.#tripMainContainer);
+    render(new LoadingMessageView(), this.#tripMainContainer);
   }
 
   clearPoints = () => {
@@ -178,7 +183,7 @@ export default class TripPresenter {
     const point = JSON.parse(JSON.stringify(points[points.length - 1]));
     point.id = Math.round(Math.random * 100);
     const newTripPointPresenter = new NewPointPresenter(this.#tripPointsComponent);
-    newTripPointPresenter.init(new TripPointView(point), this.#model.offersByTypes, this.#model.destinations, this.#resetAllPoints, this.#handleViewAction);
+    newTripPointPresenter.init(new TripPointView(point, this.#model.offersByTypes, this.#model.destinations), this.#model.offersByTypes, this.#model.destinations, this.#resetAllPoints, this.#handleViewAction);
     newTripPointPresenter.onNewPointButtonClick(true, this.#resetAllPoints);
     this.#pointsPresentors.set(Number(point.id), newTripPointPresenter);
   };
@@ -195,7 +200,7 @@ export default class TripPresenter {
 
   #renderPoint(point) {
     const pointPresenter = new PointPresenter(this.#tripPointsComponent);
-    const pointView = new TripPointView(point);
+    const pointView = new TripPointView(point, this.#model.offersByTypes, this.#model.destinations);
     pointPresenter.init(pointView, this.#model.offersByTypes, this.#model.destinations, this.#resetAllPoints, this.#handleViewAction);
     this.#pointsPresentors.set(Number(point.id), pointPresenter);
   }

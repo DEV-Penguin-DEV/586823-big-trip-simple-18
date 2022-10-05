@@ -2,10 +2,12 @@
 import dayjs from 'dayjs';
 import AbstractView from '../framework/view/abstract-view.js';
 
-const createTripPoint = (testTripPointData) => {
-  const { basePrice, dateFrom, dateTo, type } = testTripPointData;
-  const { name } = testTripPointData.destination;
-  const { price, title } = testTripPointData.offers[0];
+const createTripPoint = (tripPointData, offersByType, destinations) => {
+  const { basePrice, dateFrom, dateTo, type } = tripPointData;
+  const tripOffers = offersByType.find((offer) => offer.type === tripPointData.type);
+  const tripDestination = destinations.find((destination) => destination.id === tripPointData.destination);
+  const { name } = tripDestination;
+  const { price, title } = tripOffers.offers.length > 0 ? tripOffers.offers[0] : { price: 0, title: '' };
   return (`
   <li class="trip-events__item">
   <div class="event">
@@ -42,13 +44,17 @@ const createTripPoint = (testTripPointData) => {
 
 export default class TripPointView extends AbstractView {
   #tripPointData = null;
-  constructor(testTripPointData) {
+  #offersByTypes = null;
+  #destinations = null;
+  constructor(tripPointData, offersByTypes, destinations) {
     super();
-    this.#tripPointData = testTripPointData;
+    this.#offersByTypes = offersByTypes;
+    this.#destinations = destinations;
+    this.#tripPointData = tripPointData;
   }
 
   get template() {
-    return createTripPoint(this.#tripPointData);
+    return createTripPoint(this.#tripPointData, this.#offersByTypes, this.#destinations);
   }
 
   get tripPointData() {

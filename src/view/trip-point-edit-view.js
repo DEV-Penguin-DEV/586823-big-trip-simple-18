@@ -6,8 +6,8 @@ import 'flatpickr/dist/flatpickr.min.css';
 
 const generatePhotosTemplate = (pictures) => pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`).join('');
 
-const createNewTripPointDestinationTemplate = (tripPointData) => {
-  const { description, pictures } = tripPointData.destination;
+const createNewTripPointDestinationTemplate = (destination) => {
+  const { description, pictures } = destination;
   return (`
   <section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
@@ -38,14 +38,14 @@ const generateOffersTemplate = (offers) => {
   return result;
 };
 
-const createNewTripPointOfferTemplate = (tripPointData) => {
-  const offers = tripPointData.offers;
+const createNewTripPointOfferTemplate = (offers) => {
+  const offersElements = offers.offers;
   return (`
   <section class="event__section  event__section--offers">
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
     <div class="event__available-offers">
-      ${generateOffersTemplate(offers)}
+      ${generateOffersTemplate(offersElements)}
     </div>
   </section>
   `);
@@ -65,9 +65,11 @@ const generateDestinationsDataList = (destinations) => (`
   </datalist >
   `);
 
-const createTripPointEditTemplate = (tripPointData, destinations) => {
+const createTripPointEditTemplate = (tripPointData, offersByType, destinations) => {
   const { basePrice, dateFrom, dateTo, type } = tripPointData;
-  const { name } = tripPointData.destination;
+  const tripOffers = offersByType.find((offer) => offer.type === tripPointData.type);
+  const tripDestination = destinations.find((destination) => destination.id === tripPointData.destination);
+  const { name } = tripDestination;
   return (`
   <li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -162,8 +164,8 @@ const createTripPointEditTemplate = (tripPointData, destinations) => {
         </button>
       </header>
       <section class="event__details">
-        ${createNewTripPointOfferTemplate(tripPointData)}
-        ${createNewTripPointDestinationTemplate(tripPointData)}
+        ${createNewTripPointOfferTemplate(tripOffers)}
+        ${createNewTripPointDestinationTemplate(tripDestination)}
       </section>
     </form>
   </li>
@@ -198,15 +200,13 @@ export default class TripPointEditView extends AbstractStatefulView {
   };
 
   get template() {
-    return createTripPointEditTemplate(this._state, this.#destinations);
+    return createTripPointEditTemplate(this._state, this.#offersByTypes, this.#destinations);
   }
 
   #onDestinationChange = (evt) => {
-    const newDestination = JSON.parse(JSON.stringify(this._state.destination));
-    newDestination.name = evt.target.value;
-    const newDestinationId = this.#destinations.find((destination) => destination.name === newDestination.name).id;
+    const newDestination = evt.target.value;
     this.updateElement({
-      destination: this.#destinations.find((destination) => destination.id === newDestinationId)
+      destination: this.#destinations.find((destination) => destination.name === newDestination).id
     });
   };
 
@@ -302,8 +302,7 @@ export default class TripPointEditView extends AbstractStatefulView {
       return;
     }
     this.updateElement({
-      type: clickedType.value,
-      offers: this.#offersByTypes[clickedType.value],
+      type: clickedType.value
     });
   };
 

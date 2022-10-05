@@ -1,11 +1,6 @@
+/* eslint-disable camelcase */
 import ApiService from './framework/api-service.js';
-
-const Method = {
-  GET: 'GET',
-  PUT: 'PUT',
-  DELETE: 'DELETE',
-  POST: 'POST'
-};
+import { Method } from './constants.js';
 
 export default class PointsApiService extends ApiService {
   get points() {
@@ -17,7 +12,7 @@ export default class PointsApiService extends ApiService {
     const response = await this._load({
       url: `points/${point.id}`,
       method: Method.PUT,
-      body: JSON.stringify(point),
+      body: JSON.stringify(this.#adaptToServer(point)),
       headers: new Headers({ 'Content-Type': 'application/json' }),
     });
 
@@ -25,4 +20,19 @@ export default class PointsApiService extends ApiService {
 
     return parsedResponse;
   };
+
+  #adaptToServer(point) {
+    const adaptedPoint = {
+      ...point,
+      'base_price': Number(point['basePrice']),
+      'date_from': new Date(point['dateFrom']).toISOString(),
+      'date_to': new Date(point['dateTo']).toISOString(),
+    };
+
+    delete adaptedPoint['basePrice'];
+    delete adaptedPoint['dateFrom'];
+    delete adaptedPoint['dateTo'];
+
+    return adaptedPoint;
+  }
 }
