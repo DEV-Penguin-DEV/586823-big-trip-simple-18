@@ -1,13 +1,21 @@
 import { generateTripPoints, generateTripPointOffers, generateTripPointDestinations } from './data.js';
-import { COUNT_OF_TRIP_POINTS } from '../constants.js';
 import Observable from '../framework/observable.js';
 
 export default class Model extends Observable {
+  #pointsApi = null;
+
+  constructor(pointsApi) {
+    super();
+    this.#pointsApi = pointsApi;
+  }
+
   #destinations = generateTripPointDestinations();
   #offersByTypes = generateTripPointOffers();
-  #tripPoints = generateTripPoints(COUNT_OF_TRIP_POINTS, this.#offersByTypes, this.#destinations);
+  #tripPoints = this.#pointsApi.points;
+
 
   get tripPoints() {
+    console.log(this.#tripPoints);
     return this.#tripPoints;
   }
 
