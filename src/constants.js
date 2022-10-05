@@ -24,7 +24,13 @@ const SortType = {
   OFFERS: 'offers'
 };
 
-const DEFAULT_SORT_TYPE = SortType.PRICE;
+const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future'
+};
+
+const DEFAULT_SORT_TYPE = SortType.DAY;
+const DEFAULT_FILTER_TYPE = FilterType.EVERYTHING;
 
 const UserAction = {
   UPDATE_POINT: 'UPDATE_POINT',
@@ -38,4 +44,4 @@ const UpdateType = {
   MAJOR: 'MAJOR',
 };
 
-export { DEFAULT_SORT_TYPE, UserAction, UpdateType, CITYS, TRIP_POINTS_DESCRIPTIONS, TRIP_POINT_TYPES, OFFER_DESCRIPTIONS, OfferPriceRange, BasePriceRange, COUNT_OF_TRIP_POINTS, COUNT_OF_TRIP_POINTS_PICTURES, SortType };
+export { FilterType, DEFAULT_FILTER_TYPE, DEFAULT_SORT_TYPE, UserAction, UpdateType, CITYS, TRIP_POINTS_DESCRIPTIONS, TRIP_POINT_TYPES, OFFER_DESCRIPTIONS, OfferPriceRange, BasePriceRange, COUNT_OF_TRIP_POINTS, COUNT_OF_TRIP_POINTS_PICTURES, SortType };

@@ -1,6 +1,4 @@
 import TripPointEditView from '../view/trip-point-edit-view.js';
-import PointPresenter from './point-presenter.js';
-
 
 import { render, RenderPosition, remove } from '../framework/render';
 import { UserAction, UpdateType } from '../constants.js';
@@ -13,7 +11,6 @@ export default class NewPointPresenter {
   #tripPointEditorComponent = null;
   #resetAllView = null;
   #handlePointChange = null;
-  #pointPresenters = null;
 
   constructor(tripPointsComponent) {
     this.#tripPointsComponent = tripPointsComponent;
@@ -24,14 +21,13 @@ export default class NewPointPresenter {
     remove(this.#tripPointEditorComponent);
   };
 
-  init(point, offersByTypes, destinations, resetAllView, handlePointChange, pointPresenters) {
+  init(point, offersByTypes, destinations, resetAllView, handlePointChange) {
     this.#point = point;
     this.#point.tripPointData.id = Math.round(100 * Math.random());
     this.#destinations = destinations;
     this.#offersByTypes = offersByTypes;
     this.#tripPointEditorComponent = new TripPointEditView(this.#point.tripPointData, this.#offersByTypes, this.#destinations);
     this.#handlePointChange = handlePointChange;
-    this.#pointPresenters = pointPresenters;
     this.#resetAllView = resetAllView;
     this.#resetHandlers();
   }
@@ -75,7 +71,5 @@ export default class NewPointPresenter {
       point,
     );
     this.onNewPointButtonClick(false);
-    this.#pointPresenters.delete(Number(point.id));
-    this.#pointPresenters.set(Number(point.id), new PointPresenter(point, this.offersByTypes, this.destinations, this.#resetAllView, this.#handlePointChange));
   };
 }
