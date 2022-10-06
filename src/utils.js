@@ -6,4 +6,6 @@ const getRandomNumber = (from = 0, to = 1) => {
   return Math.round(Math.random() * (to - from) + from);
 };
 
-export { getRandomNumber };
+const isEscape = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
+
+export { getRandomNumber, isEscape };

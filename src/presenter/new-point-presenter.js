@@ -2,6 +2,7 @@ import TripPointEditView from '../view/trip-point-edit-view.js';
 
 import { render, RenderPosition, remove } from '../framework/render';
 import { UserAction, UpdateType } from '../constants.js';
+import { isEscape } from '../utils.js';
 
 export default class NewPointPresenter {
   #point = null;
@@ -41,7 +42,7 @@ export default class NewPointPresenter {
   };
 
   #onEscKeyDown = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if (isEscape(evt)) {
       evt.preventDefault();
       this.onNewPointButtonClick(false);
     }
